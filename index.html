@@ -37,6 +37,10 @@
             margin-bottom: 10px;
         }
 
+        .chat-box div {
+            margin-bottom: 10px;
+        }
+
         #user-input {
             width: 75%;
             padding: 10px;
@@ -79,12 +83,11 @@
             document.getElementById('user-input').value = '';
 
             // Mock API response for testing purposes
-            const mockReply = "This is a mock response from your AI Legal Assistant. API integration coming soon!";
+            const mockReply = "This is a mock response from your AI Legal Assistant. Integration with OpenAI API coming soon!";
             displayMessage('AI', mockReply);
 
-            // To make the real API call, uncomment the code below and use your API key
-            /*
-            const apiKey = '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'; // Replace with your OpenAI API key
+           
+            const apiKey = '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'; 
             const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
             try {
