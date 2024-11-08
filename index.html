@@ -4,7 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Legal Assistant</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* CSS Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .chat-container {
+            width: 400px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .chat-box {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        #user-input {
+            width: 75%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
     <div class="chat-container">
@@ -13,6 +65,60 @@
         <input type="text" id="user-input" placeholder="Type your question here..." autofocus>
         <button onclick="sendMessage()">Send</button>
     </div>
-    <script src="script.js"></script>
+
+    <script>
+        // JavaScript Code
+        async function sendMessage() {
+            const userInput = document.getElementById('user-input').value;
+            if (userInput.trim() === '') return; // Prevent empty messages
+
+            // Display user's message
+            displayMessage('User', userInput);
+
+            // Clear the input field
+            document.getElementById('user-input').value = '';
+
+            // Mock API response for testing purposes
+            const mockReply = "This is a mock response from your AI Legal Assistant. API integration coming soon!";
+            displayMessage('AI', mockReply);
+
+            // To make the real API call, uncomment the code below and use your API key
+            /*
+            const apiKey = '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'; // Replace with your OpenAI API key
+            const apiUrl = 'https://api.openai.com/v1/chat/completions';
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: "gpt-3.5-turbo",
+                        messages: [
+                            { "role": "system", "content": "You are an AI legal assistant specializing in Indian law." },
+                            { "role": "user", "content": userInput }
+                        ]
+                    })
+                });
+
+                const data = await response.json();
+                const reply = data.choices[0].message.content;
+                displayMessage('AI', reply);
+            } catch (error) {
+                displayMessage('AI', 'Error: Unable to fetch response. Please check your internet connection or API key.');
+            }
+            */
+        }
+
+        function displayMessage(sender, message) {
+            const chatBox = document.getElementById('chat-box');
+            const messageElement = document.createElement('div');
+            messageElement.textContent = `${sender}: ${message}`;
+            chatBox.appendChild(messageElement);
+            chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to the bottom
+        }
+    </script>
 </body>
 </html>
