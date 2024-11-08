@@ -3,81 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enlegal</title>
+    <title>AI Chat</title>
     <style>
-        /* General Styles */
-        body {
+        /* style.css */
+
+        * {
             margin: 0;
             padding: 0;
-            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #1e3c72, #2a5298, #6dd5ed);
-            font-family: 'Arial', sans-serif;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .chat-container {
+            width: 450px;
+            max-width: 100%;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-        }
-
-        .background-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.3);
-            z-index: 1;
-        }
-
-        .container {
-            position: relative;
-            z-index: 2;
-            color: white;
-            font-size: 4rem;
-            font-weight: bold;
-            text-shadow: 0px 4px 10px rgba(0, 0, 0, 0.6);
             display: flex;
+            flex-direction: column;
         }
 
-        .letter {
-            display: inline-block;
-            animation: float 3s ease-in-out infinite;
+        .chat-box {
+            height: 400px;
+            overflow-y: scroll;
+            padding: 20px;
+            background-color: #f1f1f1;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Keyframe animation */
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
+        .input-container {
+            display: flex;
+            padding: 15px;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
         }
 
-        /* Adding delays to create staggered movement */
-        .letter:nth-child(1) { animation-delay: 0s; }
-        .letter:nth-child(2) { animation-delay: 0.2s; }
-        .letter:nth-child(3) { animation-delay: 0.4s; }
-        .letter:nth-child(4) { animation-delay: 0.6s; }
-        .letter:nth-child(5) { animation-delay: 0.8s; }
-        .letter:nth-child(6) { animation-delay: 1s; }
-        .letter:nth-child(7) { animation-delay: 1.2s; }
+        input[type="text"] {
+            width: 80%;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 25px;
+            border: 1px solid #ddd;
+            outline: none;
+            transition: border 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border: 1px solid #6a0dad; /* Violet focus border */
+        }
+
+        button {
+            width: 15%;
+            padding: 12px;
+            background-color: #6a0dad; /* Violet button */
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #9b4dca; /* Darker violet on hover */
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        .user-message {
+            background-color: #f3e5f5;
+            align-self: flex-end;
+            max-width: 70%;
+            border-radius: 12px 12px 0 12px;
+        }
+
+        .bot-message {
+            background-color: #f1f1f1;
+            align-self: flex-start;
+            max-width: 70%;
+            border-radius: 12px 12px 12px 0;
+        }
+
+        /* Add smooth transition when adding messages */
+        .chat-box {
+            transition: all 0.3s ease;
+        }
     </style>
 </head>
 <body>
-    <div class="background-overlay"></div>
-    <div class="container">
-        <!-- Letters with animation -->
-        <span class="letter">e</span>
-        <span class="letter">n</span>
-        <span class="letter">l</span>
-        <span class="letter">e</span>
-        <span class="letter">g</span>
-        <span class="letter">a</span>
-        <span class="letter">l</span>
+    <div class="chat-container">
+        <div id="chat-box" class="chat-box"></div>
+        <div class="input-container">
+            <input type="text" id="user-input" placeholder="Ask me something..." />
+            <button id="send-button">Send</button>
+        </div>
     </div>
 
     <script>
-        // Optional: You can add more interactive features with JavaScript if needed
+        // app.js
+
+        const apiKey = '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'; // Replace with your actual API key
+        const chatBox = document.getElementById('chat-box');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+
+        // Function to create a new message in the chat
+        function createMessage(content, type) {
+            const message = document.createElement('div');
+            message.classList.add('message');
+            message.classList.add(type); // Add either 'user-message' or 'bot-message'
+            message.textContent = content;
+            chatBox.appendChild(message);
+            chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to the latest message
+        }
+
+        // Function to get a response from OpenAI
+        async function getResponse(userMessage) {
+            const response = await fetch('https://api.openai.com/v1/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    model: 'text-davinci-003', // Use the model you prefer
+                    prompt: userMessage,
+                    max_tokens: 150,
+                    temperature: 0.7,
+                }),
+            });
+            const data = await response.json();
+            return data.choices[0].text.trim();
+        }
+
+        // Send message when the user clicks the send button or presses 'Enter'
+        function sendMessage() {
+            const userMessage = userInput.value.trim();
+            if (userMessage) {
+                // Show user message
+                createMessage(userMessage, 'user-message');
+                userInput.value = ''; // Clear input field
+
+                // Get bot's response
+                getResponse(userMessage).then((botResponse) => {
+                    createMessage(botResponse, 'bot-message');
+                }).catch((error) => {
+                    console.error('Error fetching response from OpenAI:', error);
+                    createMessage("Sorry, I couldn't get a response at the moment.", 'bot-message');
+                });
+            }
+        }
+
+        // Event listeners
+        sendButton.addEventListener('click', sendMessage);
+        userInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
     </script>
 </body>
 </html>
